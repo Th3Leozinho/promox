@@ -54,11 +54,14 @@ async def get_db():
 @app.post("/register")
 async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     if len(user.password) > 72:
-        raise HTTPException(status_code=400, detail="Senha muito longa (máx. 72 caracteres)")
+        # Trunca a senha para 72 caracteres (bcrypt limitation)
+        password = user.password[:72]
+    else:
+        password = user.password
     result = await db.execute(select(Usuario).where(Usuario.username == user.username))
     if result.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Usuário já existe")
-    hashed_password = pwd_context.hash(user.password)
+    hashed_password = pwd_context.hash(password)
     db_user = Usuario(username=user.username, password=hashed_password)
     db.add(db_user)
     await db.commit()
