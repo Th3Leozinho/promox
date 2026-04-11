@@ -58,19 +58,7 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from proxmoxer import ProxmoxAPI
-from pydantic import BaseModel
-from typing import List
 
-app = FastAPI()
-
-# Configuração do CORS para permitir acesso do frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configurações do Proxmox (ajuste para produção)
 PROXMOX_HOST = "192.168.15.7"
