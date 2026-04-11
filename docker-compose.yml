@@ -1,3 +1,16 @@
+  db:
+    image: postgres:16
+    container_name: promox-db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: cbadmin
+      POSTGRES_PASSWORD: Leozinho191095@
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
 version: '3.8'
 services:
   backend:
