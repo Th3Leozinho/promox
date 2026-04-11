@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro - Painel Proxmox</title>
+    <style>
+        body {
+            background: #f4f6fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-box {
+            background: #fff;
+            padding: 32px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .register-box h2 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+        .register-box input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #f8fafc;
+        }
+        .register-box button {
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .register-box button:hover {
+            background: #225ea8;
+        }
+        .success {
+            color: #38a169;
+            text-align: center;
+            font-size: 0.98em;
+        }
+        .error {
+            color: #e53e3e;
+            text-align: center;
+            font-size: 0.98em;
+        }
+        .link {
+            text-align: center;
+            margin-top: 8px;
+        }
+        .link a {
+            color: #3182ce;
+            text-decoration: none;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <form class="register-box" id="register-form">
+        <h2>Criar Conta</h2>
+        <input type="text" id="username" placeholder="Usuário" required autofocus>
+        <input type="password" id="password" placeholder="Senha" required>
+        <input type="password" id="confirm" placeholder="Confirme a senha" required>
+        <button type="submit">Cadastrar</button>
+        <div class="success" id="success-msg" style="display:none;"></div>
+        <div class="error" id="error-msg" style="display:none;"></div>
+        <div class="link">Já tem conta? <a href="login.html">Entrar</a></div>
+    </form>
+    <script>
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm').value;
+            const errorMsg = document.getElementById('error-msg');
+            const successMsg = document.getElementById('success-msg');
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            if(password !== confirm) {
+                errorMsg.innerText = 'As senhas não conferem.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            try {
+                const response = await fetch('http://localhost:8000/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    // resposta não é JSON
+                }
+                if (response.ok) {
+                    successMsg.innerText = data.msg || 'Cadastro realizado com sucesso!';
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1200);
+                } else {
+                    errorMsg.innerText = data.detail || 'Erro ao cadastrar usuário.';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = 'Erro de conexão com o servidor.';
+                errorMsg.style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
