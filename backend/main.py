@@ -1,8 +1,23 @@
-from fastapi import HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.orm import declarative_base
 from passlib.context import CryptContext
+from proxmoxer import ProxmoxAPI
+from pydantic import BaseModel
+from typing import List
+
+app = FastAPI()
+
+# Configuração do CORS para permitir acesso do frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Banco de dados (ajuste a string conforme necessário)
 DATABASE_URL = "postgresql+asyncpg://cbadmin:Leozinho191095%40@192.168.15.8:5432/postgres"
