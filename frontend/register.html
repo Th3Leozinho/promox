@@ -1,3 +1,7 @@
+        <script>
+            // Detecta o endereço do backend dinamicamente
+            const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+        </script>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -98,7 +102,7 @@
                 return;
             }
             try {
-                const response = await fetch('http://backend:8000/register', {
+                const response = await fetch(`${backendUrl}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })

@@ -1,3 +1,7 @@
+        <script>
+            // Detecta o endereço do backend dinamicamente
+            const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+        </script>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -157,7 +161,7 @@
                         async function carregarISOs() {
                             const isoSelect = document.getElementById('iso');
                             try {
-                                const res = await fetch('http://backend:8000/isos');
+                                const res = await fetch(`${backendUrl}/isos`);
                                 const isos = await res.json();
                                 isoSelect.innerHTML = '';
                                 if (isos.length === 0) {
@@ -199,7 +203,7 @@
         async function fetchVMs() {
             const container = document.getElementById('vms');
             try {
-                const res = await fetch('http://backend:8000/vms');
+                const res = await fetch(`${backendUrl}/vms`);
                 if (!res.ok) throw new Error('Erro ao buscar VMs');
                 const vms = await res.json();
                 container.innerHTML = '';
@@ -224,7 +228,7 @@
         }
 
         async function startVM(vmid) {
-            await fetch('http://backend:8000/vms/start', {
+            await fetch(`${backendUrl}/vms/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vmid })
@@ -232,7 +236,7 @@
             fetchVMs();
         }
         async function stopVM(vmid) {
-            await fetch('http://backend:8000/vms/stop', {
+            await fetch(`${backendUrl}/vms/stop`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vmid })
@@ -240,7 +244,7 @@
             fetchVMs();
         }
         async function rebootVM(vmid) {
-            await fetch('http://backend:8000/vms/reboot', {
+            await fetch(`${backendUrl}/vms/reboot`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vmid })
@@ -248,7 +252,7 @@
             fetchVMs();
         }
         async function openConsole(vmid) {
-            const res = await fetch(`http://backend:8000/vms/${vmid}/console`);
+            const res = await fetch(`${backendUrl}/vms/${vmid}/console`);
             const data = await res.json();
             window.open(data.url, '_blank');
         }
@@ -259,7 +263,7 @@
             const memory = document.getElementById('memory').value;
             const disk = document.getElementById('disk').value;
             const iso = document.getElementById('iso').value;
-            await fetch('http://backend:8000/vms/create', {
+            await fetch(`${backendUrl}/vms/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, cores, memory, disk, iso })
