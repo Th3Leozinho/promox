@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
@@ -70,10 +71,6 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
     if not db_user or not pwd_context.verify(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
     return {"msg": "Login realizado com sucesso"}
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from proxmoxer import ProxmoxAPI
-
 
 # Configurações do Proxmox (ajuste para produção)
 PROXMOX_HOST = "192.168.15.7"
@@ -81,7 +78,6 @@ PROXMOX_USER = "root@pam"
 PROXMOX_PASSWORD = "Leozinho19@"
 PROXMOX_NODE = "pve"
 
-# Modelos
 class VMCreateRequest(BaseModel):
     name: str
     cores: int
@@ -92,7 +88,6 @@ class VMCreateRequest(BaseModel):
 class VMActionRequest(BaseModel):
     vmid: int
 
-# Instância do Proxmox
 proxmox = ProxmoxAPI(
     PROXMOX_HOST, user=PROXMOX_USER, password=PROXMOX_PASSWORD, verify_ssl=False
 )
