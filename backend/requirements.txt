@@ -1,0 +1,4 @@
+# requirements.txt para backend Python
+# Adicione suas dependências aqui
+fastapi
+uvicorn[standard]
