@@ -184,57 +184,8 @@
             </form>
         </div>
         <hr>
-        <h2>Minhas Máquinas Alugadas</h2>
-        <table id="tabela-alugadas" style="width:100%;margin-bottom:24px;border-collapse:collapse;">
-            <thead>
-                <tr style="background:#e2e8f0;">
-                    <th style="padding:8px 4px;">VMID</th>
-                    <th>IP</th>
-                    <th>Porta</th>
-                    <th>Login</th>
-                    <th>Senha</th>
-                    <th>Chave</th>
-                    <th>Dias Restantes</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-alugadas">
-                <tr><td colspan="7" style="text-align:center;">Nenhuma máquina alugada encontrada.</td></tr>
-            </tbody>
-        </table>
+        <h2>Minhas VMs</h2>
         <div id="vms"></div>
-            // Função para buscar e exibir máquinas alugadas do usuário
-            async function carregarMaquinasAlugadas() {
-                const tbody = document.getElementById('tbody-alugadas');
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Carregando...</td></tr>';
-                // Exemplo: buscar do localStorage (você pode adaptar para buscar do backend)
-                let alugadas = JSON.parse(localStorage.getItem('maquinasAlugadas') || '[]');
-                if (!alugadas.length) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma máquina alugada encontrada.</td></tr>';
-                    return;
-                }
-                tbody.innerHTML = '';
-                for (const item of alugadas) {
-                    try {
-                        const res = await fetch(`${backendUrl}/maquina_alugada/${item.vmid}/${item.chave}`);
-                        if (!res.ok) throw new Error('Não encontrada');
-                        const m = await res.json();
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${m.vmid}</td>
-                                <td>${m.ip}</td>
-                                <td>${m.porta}</td>
-                                <td>${m.login}</td>
-                                <td>${m.senha}</td>
-                                <td>${m.chave_key}</td>
-                                <td>${m.dias_restantes}</td>
-                            </tr>
-                        `;
-                    } catch {
-                        tbody.innerHTML += `<tr><td colspan="7" style="text-align:center;">Erro ao buscar VMID ${item.vmid}</td></tr>`;
-                    }
-                }
-            }
-            carregarMaquinasAlugadas();
     </div>
     <script>
         // Proteção de login global

@@ -44,6 +44,17 @@ class MaquinaAlugadaOut(BaseModel):
 
 # ...existing code...
 
+app = FastAPI()
+
+# Configuração do CORS para permitir acesso do frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
 from fastapi import Query
 
@@ -56,14 +67,6 @@ async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(
     if not maquina:
         raise HTTPException(status_code=404, detail="Máquina não encontrada")
     return maquina
-# Configuração do CORS para permitir acesso do frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 # Banco de dados (ajuste a string conforme necessário)
