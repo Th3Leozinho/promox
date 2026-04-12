@@ -237,9 +237,22 @@ def criar_vm(req: VMCreateRequest):
     )
     return {"status": "VM criada", "vmid": vmid}
 
+
+from fastapi import Body
+from sqlalchemy.future import select
+
 @app.post("/vms/start")
-def start_vm(req: VMActionRequest):
+async def start_vm(req: VMActionRequest, db: AsyncSession = Depends(get_db)):
     proxmox.nodes(PROXMOX_NODE).qemu(req.vmid).status.start.post()
+    # Atualiza o status no banco
+    result = await db.execute(select(MaquinaStatus).where(MaquinaStatus.vmid == req.vmid))
+    status = result.scalar_one_or_none()
+    if status:
+        status.status = "indisponivel"
+    else:
+        status = MaquinaStatus(vmid=req.vmid, status="indisponivel")
+        db.add(status)
+    await db.commit()
     return {"status": "VM iniciada"}
 
 @app.post("/vms/stop")
