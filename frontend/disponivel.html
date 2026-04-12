@@ -85,7 +85,7 @@
             try {
                 const res = await fetch(`${backendUrl}/vms`);
                 const vms = await res.json();
-                vmsDisponiveis = vms.filter(vm => vm.status === 'stopped');
+                vmsDisponiveis = vms; // Mostra todas as VMs
                 container.innerHTML = '';
                 vmsDisponiveis.forEach(vm => {
                     const div = document.createElement('div');
