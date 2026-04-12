@@ -10,8 +10,9 @@
                 document.getElementById('user-welcome').textContent = `Bem-vindo, ${user}!`;
             }
             function logoutUser() {
-                // Limpa o nome do usuário e redireciona para login
+                // Limpa o nome do usuário, token e redireciona para login
                 localStorage.removeItem('username');
+                localStorage.removeItem('auth');
                 window.location.href = 'login.html';
             }
             setUserName();
