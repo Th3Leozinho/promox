@@ -1,3 +1,30 @@
+class Credencial(Base):
+    __tablename__ = "credenciais"
+    id = Column(Integer, primary_key=True, index=True)
+    vmid = Column(Integer, index=True)
+    login = Column(String)
+    senha = Column(String)
+    chave = Column(String)
+    usuario = Column(String, index=True)  # Relaciona ao usuário dono
+
+class CredencialCreate(BaseModel):
+    vmid: int
+    login: str
+    senha: str
+    chave: str
+    usuario: str
+
+class CredencialOut(BaseModel):
+    id: int
+    vmid: int
+    login: str
+    senha: str
+    chave: str
+    usuario: str
+
+    class Config:
+        orm_mode = True
+
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,10 +69,25 @@ class UserLogin(BaseModel):
     password: str
 
 # Evento de startup para criar as tabelas automaticamente
+# Evento de startup para criar as tabelas automaticamente
 @app.on_event("startup")
 async def on_startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+# ENDPOINT para cadastrar credencial
+@app.post("/credenciais", response_model=CredencialOut)
+async def criar_credencial(cred: CredencialCreate, db: AsyncSession = Depends(get_db)):
+    db_cred = Credencial(**cred.dict())
+    db.add(db_cred)
+    await db.commit()
+    await db.refresh(db_cred)
+    return db_cred
+
+# ENDPOINT para listar credenciais de um usuário
+@app.get("/credenciais/{usuario}", response_model=List[CredencialOut])
+async def listar_credenciais(usuario: str, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Credencial).where(Credencial.usuario == usuario))
+    return result.scalars().all()
 
 async def get_db():
     async with SessionLocal() as session:
