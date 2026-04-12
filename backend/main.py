@@ -55,6 +55,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ...existing code...
+
+# Função para obter sessão do banco
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
+
 # ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
 from fastapi import Query
 
