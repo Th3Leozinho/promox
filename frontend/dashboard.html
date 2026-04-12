@@ -184,7 +184,20 @@
             </form>
         </div>
         <hr>
-        <h2>Minhas VMs</h2>
+        <h2>Minhas Máquinas Alugadas</h2>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+            <thead>
+                <tr style="background:#e9eef6;">
+                    <th style="padding:8px 4px;text-align:left;">VMID</th>
+                    <th style="padding:8px 4px;text-align:left;">Login</th>
+                    <th style="padding:8px 4px;text-align:left;">Senha</th>
+                    <th style="padding:8px 4px;text-align:left;">Chave</th>
+                </tr>
+            </thead>
+            <tbody id="credenciais-list">
+                <tr><td colspan="4" style="text-align:center;color:#444;">Carregando...</td></tr>
+            </tbody>
+        </table>
         <div id="vms"></div>
     </div>
     <script>
@@ -303,6 +316,32 @@
         };
         fetchVMs();
         setInterval(fetchVMs, 10000);
+
+        // Buscar e exibir credenciais do usuário
+        async function fetchCredenciais() {
+            const tbody = document.getElementById('credenciais-list');
+            try {
+                const res = await fetch(`${backendUrl}/credenciais`);
+                if (!res.ok) throw new Error('Erro ao buscar credenciais');
+                const creds = await res.json();
+                if (!creds.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#444;">Nenhuma credencial encontrada.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                creds.forEach(cred => {
+                    tbody.innerHTML += `<tr>
+                        <td style='padding:6px 4px;'>${cred.vmid || cred.id || '-'}</td>
+                        <td style='padding:6px 4px;'>${cred.login || '-'}</td>
+                        <td style='padding:6px 4px;'>${cred.senha || '-'}</td>
+                        <td style='padding:6px 4px;'>${cred.chave || '-'}</td>
+                    </tr>`;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#e53e3e;">Erro ao buscar credenciais.</td></tr>';
+            }
+        }
+        fetchCredenciais();
     </script>
 </body>
 
