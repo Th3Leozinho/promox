@@ -81,10 +81,29 @@
         <div class="msg" id="credencial-msg"></div>
     </div>
     <script>
-        document.getElementById('form-credencial').onsubmit = function(e) {
+        document.getElementById('form-credencial').onsubmit = async function(e) {
             e.preventDefault();
-            document.getElementById('credencial-msg').innerText = 'Credencial cadastrada (exemplo)!';
-            // Aqui você pode adicionar o envio para o backend se desejar
+            const vmid = document.getElementById('credencial-vmid').value;
+            const login = document.getElementById('credencial-login').value;
+            const senha = document.getElementById('credencial-senha-vm').value;
+            const chave = document.getElementById('credencial-key').value;
+            // Pega o usuário logado do localStorage
+            const usuario = localStorage.getItem('username') || '';
+            const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+            try {
+                const res = await fetch(`${backendUrl}/credenciais`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vmid, login, senha, chave, usuario })
+                });
+                if (res.ok) {
+                    document.getElementById('credencial-msg').innerText = 'Credencial cadastrada com sucesso!';
+                } else {
+                    document.getElementById('credencial-msg').innerText = 'Erro ao cadastrar credencial.';
+                }
+            } catch (err) {
+                document.getElementById('credencial-msg').innerText = 'Erro ao cadastrar credencial.';
+            }
         };
     </script>
 </body>
