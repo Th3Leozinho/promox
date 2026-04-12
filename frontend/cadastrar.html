@@ -66,10 +66,19 @@
         <form id="form-credencial">
             <label for="credencial-nome">Nome da Credencial:</label>
             <input type="text" id="credencial-nome" required>
-            <label for="credencial-usuario">Usuário:</label>
-            <input type="text" id="credencial-usuario" required>
-            <label for="credencial-senha">Senha:</label>
-            <input type="password" id="credencial-senha" required>
+
+            <label for="credencial-vmid">VMID:</label>
+            <input type="number" id="credencial-vmid" required>
+
+            <label for="credencial-login">Login da VM:</label>
+            <input type="text" id="credencial-login" required>
+
+            <label for="credencial-senha-vm">Senha da VM:</label>
+            <input type="password" id="credencial-senha-vm" required>
+
+            <label for="credencial-key">Chave (key):</label>
+            <input type="text" id="credencial-key" required>
+
             <button type="submit">Cadastrar</button>
         </form>
         <div class="msg" id="credencial-msg"></div>
