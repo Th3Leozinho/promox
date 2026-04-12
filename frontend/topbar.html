@@ -1,8 +1,20 @@
 <div class="topbar" style="position:fixed;top:0;left:0;width:100vw;height:56px;background:#2b6cb0;color:#fff;display:flex;align-items:center;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
     <div style="font-weight:bold;font-size:1.2em;padding-left:32px;">Painel Proxmox</div>
-    <div style="margin-left:auto;padding-right:32px;">
-        <a href="index.html" style="color:#fff;text-decoration:none;font-weight:bold;margin-right:24px;">Início</a>
-        <a href="login.html" style="color:#fff;text-decoration:none;font-weight:bold;margin-right:24px;">Login</a>
-        <a href="register.html" style="color:#fff;text-decoration:none;font-weight:bold;">Cadastro</a>
+    <div style="margin-left:auto;padding-right:32px;display:flex;align-items:center;gap:18px;">
+        <span id="user-welcome" style="font-size:1em;opacity:0.95;">Bem-vindo!</span>
+        <button onclick="logoutUser()" style="background:#e53e3e;color:#fff;border:none;border-radius:6px;padding:8px 22px;font-weight:bold;font-size:1em;cursor:pointer;transition:background 0.2s;">Logout</button>
+        <script>
+            function setUserName() {
+                // Tenta pegar o nome do usuário do localStorage, se não achar, usa 'Usuário'
+                const user = localStorage.getItem('username') || 'Usuário';
+                document.getElementById('user-welcome').textContent = `Bem-vindo, ${user}!`;
+            }
+            function logoutUser() {
+                // Limpa o nome do usuário e redireciona para login
+                localStorage.removeItem('username');
+                window.location.href = 'login.html';
+            }
+            setUserName();
+        </script>
     </div>
 </div>
