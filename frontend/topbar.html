@@ -2,19 +2,20 @@
     <div style="font-weight:bold;font-size:1.2em;padding-left:32px;">Painel Proxmox</div>
     <div style="margin-left:auto;padding-right:32px;display:flex;align-items:center;gap:18px;">
         <span id="user-welcome" style="font-size:1em;opacity:0.95;">Bem-vindo!</span>
-        <button onclick="logoutUser()" style="background:#e53e3e;color:#fff;border:none;border-radius:6px;padding:8px 22px;font-weight:bold;font-size:1em;cursor:pointer;transition:background 0.2s;">Logout</button>
+        <button id="logout-btn" style="background:#e53e3e;color:#fff;border:none;border-radius:6px;padding:8px 22px;font-weight:bold;font-size:1em;cursor:pointer;transition:background 0.2s;">Logout</button>
         <script>
             function setUserName() {
                 // Tenta pegar o nome do usuário do localStorage, se não achar, usa 'Usuário'
                 const user = localStorage.getItem('username') || 'Usuário';
                 document.getElementById('user-welcome').textContent = `Bem-vindo, ${user}!`;
             }
-            function logoutUser() {
-                // Limpa o nome do usuário, token e redireciona para login
+            function logoutUser(event) {
+                if (event) event.preventDefault();
                 localStorage.removeItem('username');
                 localStorage.removeItem('auth');
                 window.location.href = 'login.html';
             }
+            document.getElementById('logout-btn').onclick = logoutUser;
             setUserName();
         </script>
     </div>
