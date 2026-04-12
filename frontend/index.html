@@ -121,41 +121,60 @@
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;">Dashboard</a>
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;">Minhas VMs</a>
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;">Configurações</a>
+        <a href="#" id="menu-credencial" style="color:#2b6cb0;text-decoration:none;font-weight:bold;padding:10px 24px;">Cadastrar Credencial</a>
     </div>
-    <div class="container" style="margin-left:200px;margin-top:72px;">
+    <div class="container" id="main-container" style="margin-left:200px;margin-top:72px;">
         <h1>Painel Proxmox - Mini AWS</h1>
-        <div>
-            <h2>Criar VM</h2>
-            <form id="create-vm-form">
-                <div style="display: flex; flex-direction: column;">
-                    <label for="name">Nome:</label>
-                    <input type="text" id="name" required>
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    <label for="cores">Cores:</label>
-                    <input type="number" id="cores" value="1" min="1" required>
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    <label for="memory">Memória (MB):</label>
-                    <input type="number" id="memory" value="1024" min="256" required>
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    <label for="disk">Disco (GB):</label>
-                    <input type="number" id="disk" value="10" min="1" required>
-                </div>
-                <div style="display: flex; flex-direction: column; grid-column: 1 / span 2;">
-                    <label for="iso">ISO:</label>
-                    <select id="iso" required>
-                        <option value="">Carregando ISOs...</option>
-                    </select>
-                </div>
-                <button type="submit">Criar</button>
-            </form>
+        <div id="conteudo-principal">
+            <div id="conteudo-dashboard">
+                <h2>Criar VM</h2>
+                <form id="create-vm-form">
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="name">Nome:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="cores">Cores:</label>
+                        <input type="number" id="cores" value="1" min="1" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="memory">Memória (MB):</label>
+                        <input type="number" id="memory" value="1024" min="256" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="disk">Disco (GB):</label>
+                        <input type="number" id="disk" value="10" min="1" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column; grid-column: 1 / span 2;">
+                        <label for="iso">ISO:</label>
+                        <select id="iso" required>
+                            <option value="">Carregando ISOs...</option>
+                        </select>
+                    </div>
+                    <button type="submit">Criar</button>
+                </form>
+                <hr>
+                <h2>Minhas VMs</h2>
+                <div id="vms"></div>
+            </div>
+            <div id="conteudo-credencial" style="display:none;">
+                <h2>Cadastrar Credencial</h2>
+                <button id="btn-cadastrar-credencial" style="background:#3182ce;color:#fff;border:none;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">Cadastrar Credencial</button>
+            </div>
         </div>
-        <hr>
-        <h2>Minhas VMs</h2>
-        <div id="vms"></div>
     </div>
+            // Menu Cadastrar Credencial
+            document.getElementById('menu-credencial').onclick = function(e) {
+                e.preventDefault();
+                document.getElementById('conteudo-dashboard').style.display = 'none';
+                document.getElementById('conteudo-credencial').style.display = 'block';
+            };
+            // Voltar para Dashboard ao clicar em Dashboard
+            document.querySelectorAll('.sidebar a')[0].onclick = function(e) {
+                e.preventDefault();
+                document.getElementById('conteudo-dashboard').style.display = 'block';
+                document.getElementById('conteudo-credencial').style.display = 'none';
+            };
     <script>
                         // Preenche o select de ISOs automaticamente
                         async function carregarISOs() {
