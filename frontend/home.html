@@ -88,13 +88,18 @@
                         <td style='text-align:center;border:1px solid #e2e8f0;'>${c.senha}</td>
                     </tr>
                 `).join('');
+                    // Atualiza o card de dias restantes do token com o valor da primeira credencial
+                    if (creds[0] && typeof creds[0].dias !== 'undefined') {
+                        document.getElementById('dias-token').textContent = creds[0].dias;
+                    } else {
+                        document.getElementById('dias-token').textContent = '-';
+                    }
             } catch (err) {
                 document.getElementById('tabela-credenciais').innerHTML = '<tr><td colspan="4">Erro ao carregar credenciais.</td></tr>';
             }
         }
         carregarCredenciais();
-        // Os cards de token, sessão, horas e assinatura podem ser preenchidos aqui se houver API futuramente
-        document.getElementById('dias-token').textContent = '29';
+        // Os cards de sessão, horas e assinatura podem ser preenchidos aqui se houver API futuramente
         document.getElementById('ultima-sessao').textContent = '-';
         document.getElementById('horas-totais').textContent = '-';
         document.getElementById('assinatura-atual').textContent = '-';
