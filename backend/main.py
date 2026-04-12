@@ -46,42 +46,47 @@ from typing import List
 
 Base = declarative_base()
 
-class Credencial(Base):
-    __tablename__ = "credenciais"
+
+
+
+Base = declarative_base()
+
+class MaquinaAlugada(Base):
+    __tablename__ = "maquinas_alugadas"
     id = Column(Integer, primary_key=True, index=True)
-    vmid = Column(Integer, index=True)
+    user_id = Column(Integer)
+    vmid = Column(Integer)
+    ip = Column(String)
+    porta = Column(Integer)
     login = Column(String)
     senha = Column(String)
-    chave = Column(String)
+    chave_key = Column(String)
+    dias_restantes = Column(Integer)
+    created_at = Column(String)
 
-class CredencialCreate(BaseModel):
+class MaquinaAlugadaOut(BaseModel):
     vmid: int
+    ip: str
+    porta: int
     login: str
     senha: str
-    chave: str
-
-class CredencialOut(BaseModel):
-    id: int
-    vmid: int
-    login: str
-    senha: str
-    chave: str
+    chave_key: str
+    dias_restantes: int
 
     class Config:
         orm_mode = True
 
-
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy import Column, Integer, String, select
-from passlib.context import CryptContext
-from proxmoxer import ProxmoxAPI
-from pydantic import BaseModel
-from typing import List
-
-app = FastAPI()
-
+# ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
+from fastapi import Query
+@app.get("/maquina_alugada/{vmid}/{chave}", response_model=MaquinaAlugadaOut)
+async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(MaquinaAlugada).where(MaquinaAlugada.vmid == vmid, MaquinaAlugada.chave_key == chave)
+    )
+    maquina = result.scalar_one_or_none()
+    if not maquina:
+        raise HTTPException(status_code=404, detail="Máquina não encontrada")
+    return maquina
 # Configuração do CORS para permitir acesso do frontend
 app.add_middleware(
     CORSMiddleware,
