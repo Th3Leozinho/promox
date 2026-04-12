@@ -1,38 +1,3 @@
-class MaquinaAlugada(Base):
-    __tablename__ = "maquinas_alugadas"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer)
-    vmid = Column(Integer)
-    ip = Column(String)
-    porta = Column(Integer)
-    login = Column(String)
-    senha = Column(String)
-    chave_key = Column(String)
-    dias_restantes = Column(Integer)
-    created_at = Column(String)
-
-class MaquinaAlugadaOut(BaseModel):
-    vmid: int
-    ip: str
-    porta: int
-    login: str
-    senha: str
-    chave_key: str
-    dias_restantes: int
-
-    class Config:
-        orm_mode = True
-# ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
-from fastapi import Query
-@app.get("/maquina_alugada/{vmid}/{chave}", response_model=MaquinaAlugadaOut)
-async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(
-        select(MaquinaAlugada).where(MaquinaAlugada.vmid == vmid, MaquinaAlugada.chave_key == chave)
-    )
-    maquina = result.scalar_one_or_none()
-    if not maquina:
-        raise HTTPException(status_code=404, detail="Máquina não encontrada")
-    return maquina
 
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.orm import declarative_base
