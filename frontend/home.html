@@ -69,14 +69,10 @@
     <script>
         // Função para buscar e preencher as credenciais
         async function carregarCredenciais() {
-            const username = localStorage.getItem('username');
-            if (!username) {
-                document.getElementById('tabela-credenciais').innerHTML = '<tr><td colspan="4">Faça login para ver suas credenciais.</td></tr>';
-                return;
-            }
+            // Não precisa de username para buscar todas as credenciais
             try {
                 const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
-                const res = await fetch(`${backendUrl}/credenciais/${username}`);
+                const res = await fetch(`${backendUrl}/credenciais`);
                 const creds = await res.json();
                 if (!creds.length) {
                     document.getElementById('tabela-credenciais').innerHTML = '<tr><td colspan="4">Nenhuma credencial encontrada.</td></tr>';
@@ -84,7 +80,7 @@
                 }
                 document.getElementById('tabela-credenciais').innerHTML = creds.map(c => `
                     <tr>
-                        <td style='text-align:center;border:1px solid #e2e8f0;'>${c.vmid}</td>
+                        <td style='text-align:center;border:1px solid #e2e8f0;'>${c.vmid || c.id || '-'}</td>
                         <td style='text-align:center;border:1px solid #e2e8f0;'>${c.login}</td>
                         <td style='text-align:center;border:1px solid #e2e8f0;'>${c.senha}</td>
                         <td style='text-align:center;border:1px solid #e2e8f0;'>${c.chave}</td>
