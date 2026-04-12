@@ -18,14 +18,12 @@ class Credencial(Base):
     login = Column(String)
     senha = Column(String)
     chave = Column(String)
-    usuario = Column(String, index=True)  # Relaciona ao usuário dono
 
 class CredencialCreate(BaseModel):
     vmid: int
     login: str
     senha: str
     chave: str
-    usuario: str
 
 class CredencialOut(BaseModel):
     id: int
@@ -33,7 +31,6 @@ class CredencialOut(BaseModel):
     login: str
     senha: str
     chave: str
-    usuario: str
 
     class Config:
         orm_mode = True
@@ -107,9 +104,9 @@ async def get_db():
         yield session
 
 # ENDPOINT para listar credenciais de um usuário
-@app.get("/credenciais/{usuario}", response_model=List[CredencialOut])
-async def listar_credenciais(usuario: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Credencial).where(Credencial.usuario == usuario))
+@app.get("/credenciais", response_model=List[CredencialOut])
+async def listar_credenciais(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Credencial))
     return result.scalars().all()
 
 @app.post("/register")
