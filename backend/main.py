@@ -20,6 +20,9 @@ class Credencial(Base):
     login = Column(String)
     senha = Column(String)
     chave = Column(String)
+    ip = Column(String)
+    porta = Column(Integer)
+    dias = Column(Integer)
 
 # Pydantic para criação
 class CredencialCreate(BaseModel):
@@ -27,8 +30,12 @@ class CredencialCreate(BaseModel):
     login: str
     senha: str
     chave: str
+    ip: str
+    porta: int
+    dias: int
 
 # Pydantic para resposta
+
 
 
 
@@ -38,6 +45,9 @@ class CredencialOut(BaseModel):
     login: str
     senha: str
     chave: str
+    ip: str
+    porta: int
+    dias: int
 
     class Config:
         orm_mode = True

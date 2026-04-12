@@ -76,6 +76,15 @@
             <label for="credencial-key">Chave (key):</label>
             <input type="text" id="credencial-key" required>
 
+            <label for="credencial-ip">IP da Máquina:</label>
+            <input type="text" id="credencial-ip" required>
+
+            <label for="credencial-porta">Porta da Máquina:</label>
+            <input type="number" id="credencial-porta" required>
+
+            <label for="credencial-dias">Dias de aluguel:</label>
+            <input type="number" id="credencial-dias" required>
+
             <button type="submit">Cadastrar</button>
         </form>
         <div class="msg" id="credencial-msg"></div>
@@ -87,14 +96,15 @@
             const login = document.getElementById('credencial-login').value;
             const senha = document.getElementById('credencial-senha-vm').value;
             const chave = document.getElementById('credencial-key').value;
-            // Pega o usuário logado do localStorage
-            const usuario = localStorage.getItem('username') || '';
+            const ip = document.getElementById('credencial-ip').value;
+            const porta = document.getElementById('credencial-porta').value;
+            const dias = document.getElementById('credencial-dias').value;
             const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
             try {
                 const res = await fetch(`${backendUrl}/credenciais`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ vmid, login, senha, chave, usuario })
+                    body: JSON.stringify({ vmid, login, senha, chave, ip, porta, dias })
                 });
                 if (res.ok) {
                     document.getElementById('credencial-msg').innerText = 'Credencial cadastrada com sucesso!';
