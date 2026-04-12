@@ -133,15 +133,14 @@
                 document.getElementById('modal-key-error').innerText = 'Digite a chave.';
                 return;
             }
-            // Verifica a chave no backend (credenciais)
             try {
-                const res = await fetch(`${backendUrl}/credenciais`);
-                const creds = await res.json();
-                const cred = creds.find(c => c.vmid === vmSelecionada.vmid && c.chave === key);
-                if (!cred) {
+                // Busca as informações completas da máquina alugada
+                const res = await fetch(`${backendUrl}/maquina_alugada/${vmSelecionada.vmid}/${key}`);
+                if (!res.ok) {
                     document.getElementById('modal-key-error').innerText = 'Chave inválida para este computador.';
                     return;
                 }
+                const info = await res.json();
                 // Torna o computador indisponível (exemplo: inicia a VM)
                 await fetch(`${backendUrl}/vms/start`, {
                     method: 'POST',
@@ -149,6 +148,14 @@
                     body: JSON.stringify({ vmid: vmSelecionada.vmid })
                 });
                 fecharModalKey();
+                // Mostra as informações da máquina para o usuário
+                let msg = `Informações da Máquina Alugada:\n` +
+                    `IP: ${info.ip}\n` +
+                    `Porta: ${info.porta}\n` +
+                    `Login: ${info.login}\n` +
+                    `Senha: ${info.senha}\n` +
+                    `Dias Restantes: ${info.dias_restantes}`;
+                alert(msg);
                 // Atualiza status visualmente sem recarregar tudo
                 const card = document.getElementById(`vm-card-${vmSelecionada.vmid}`);
                 if (card) {
