@@ -16,7 +16,7 @@ Base = declarative_base()
 class Credencial(Base):
     __tablename__ = "credenciais"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer)
+    vmid = Column(Integer)
     nome = Column(String)
     ip = Column(String)
     porta = Column(Integer)
@@ -28,7 +28,7 @@ class Credencial(Base):
 
 # Pydantic para criação
 class CredencialCreate(BaseModel):
-    user_id: int = 1
+    vmid: int
     nome: str = ""
     ip: str = ""
     porta: int = 0
@@ -40,9 +40,10 @@ class CredencialCreate(BaseModel):
 
 # Pydantic para resposta
 
+
 class CredencialOut(BaseModel):
     id: int
-    user_id: int
+    vmid: int
     nome: str
     ip: str
     porta: int
