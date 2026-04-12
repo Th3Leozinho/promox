@@ -74,6 +74,14 @@
             </div>
         </div>
     </div>
+    <!-- Modal para mostrar informações da máquina -->
+    <div id="modal-info" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:1100;align-items:center;justify-content:center;">
+        <div style="background:#fff;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.12);min-width:320px;max-width:90vw;display:flex;flex-direction:column;align-items:center;">
+            <h2>Informações da Máquina Alugada</h2>
+            <div id="info-content" style="margin:16px 0 8px 0;font-size:1.08em;color:#2d3748;"></div>
+            <button id="btn-info-close" style="background:#3182ce;color:#fff;border:none;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">Fechar</button>
+        </div>
+    </div>
     <script>
         // Busca as VMs do backend e exibe as disponíveis
         const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
@@ -127,6 +135,9 @@
             document.getElementById('modal-key').style.display = 'none';
         }
         document.getElementById('btn-key-cancel').onclick = fecharModalKey;
+        document.getElementById('btn-info-close').onclick = function() {
+            document.getElementById('modal-info').style.display = 'none';
+        };
         document.getElementById('btn-key-confirm').onclick = async function() {
             const key = document.getElementById('input-key').value.trim();
             if (!key) {
@@ -148,14 +159,14 @@
                     body: JSON.stringify({ vmid: vmSelecionada.vmid })
                 });
                 fecharModalKey();
-                // Mostra as informações da máquina para o usuário
-                let msg = `Informações da Máquina Alugada:\n` +
-                    `IP: ${info.ip}\n` +
-                    `Porta: ${info.porta}\n` +
-                    `Login: ${info.login}\n` +
-                    `Senha: ${info.senha}\n` +
-                    `Dias Restantes: ${info.dias_restantes}`;
-                alert(msg);
+                // Mostra as informações da máquina para o usuário em um modal estilizado
+                let html = `<b>IP:</b> ${info.ip}<br>` +
+                    `<b>Porta:</b> ${info.porta}<br>` +
+                    `<b>Login:</b> ${info.login}<br>` +
+                    `<b>Senha:</b> ${info.senha}<br>` +
+                    `<b>Dias Restantes:</b> ${info.dias_restantes}`;
+                document.getElementById('info-content').innerHTML = html;
+                document.getElementById('modal-info').style.display = 'flex';
                 // Atualiza status visualmente sem recarregar tudo
                 const card = document.getElementById(`vm-card-${vmSelecionada.vmid}`);
                 if (card) {
