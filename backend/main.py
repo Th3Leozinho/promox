@@ -1,3 +1,6 @@
+from sqlalchemy.orm import declarative_base
+Base = declarative_base()
+
 class Credencial(Base):
     __tablename__ = "credenciais"
     id = Column(Integer, primary_key=True, index=True)
@@ -30,7 +33,6 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import Column, Integer, String, select
-from sqlalchemy.orm import declarative_base
 from passlib.context import CryptContext
 from proxmoxer import ProxmoxAPI
 from pydantic import BaseModel
