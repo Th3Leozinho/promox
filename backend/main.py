@@ -59,12 +59,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Banco de dados (ajuste a string conforme necessário)
+
 # Banco de dados (ajuste a string conforme necessário)
 DATABASE_URL = "postgresql+asyncpg://cbadmin:Leozinho191095%40@192.168.15.8:5432/postgres"
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Função para obter sessão do banco
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
 
 class Usuario(Base):
     __tablename__ = "usuarios"
