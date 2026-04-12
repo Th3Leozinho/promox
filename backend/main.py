@@ -95,21 +95,17 @@ async def criar_credencial(cred: CredencialCreate, db: AsyncSession = Depends(ge
     await db.refresh(db_cred)
     return db_cred
 
-# ENDPOINT para listar credenciais de um usuário
-# ENDPOINT para listar credenciais de um usuário
-@app.get("/credenciais/{usuario}", response_model=List[CredencialOut])
-async def listar_credenciais(usuario: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Credencial).where(Credencial.usuario == usuario))
-    return result.scalars().all()
 
 # Função para obter sessão do banco
 async def get_db():
     async with SessionLocal() as session:
         yield session
 
-async def get_db():
-    async with SessionLocal() as session:
-        yield session
+# ENDPOINT para listar credenciais de um usuário
+@app.get("/credenciais/{usuario}", response_model=List[CredencialOut])
+async def listar_credenciais(usuario: str, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Credencial).where(Credencial.usuario == usuario))
+    return result.scalars().all()
 
 @app.post("/register")
 async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
