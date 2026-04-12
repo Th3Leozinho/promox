@@ -91,9 +91,9 @@
                     const div = document.createElement('div');
                     div.className = 'computador';
                     div.style.cursor = 'pointer';
-                    div.innerHTML = `
+                        div.innerHTML = ` 
                         <img src="https://img.icons8.com/color/96/000000/laptop.png" alt="Laptop" style="width:64px;margin:0 auto 8px auto;display:block;">
-                        <b>${vm.name || 'Livre'}</b>
+                            <b>${vm.name || 'Livre'} (ID: ${vm.vmid})</b>
                         <span>Status: Livre</span>
                         <span>Sistema: Outro</span>
                     `;
