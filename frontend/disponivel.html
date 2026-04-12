@@ -87,34 +87,43 @@
         const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
         let vmsDisponiveis = [];
         let vmSelecionada = null;
+
         async function carregarComputadoresDisponiveis() {
             const container = document.getElementById('computadores-list');
             container.innerHTML = 'Carregando...';
             try {
+                // Busca status das máquinas
+                const statusRes = await fetch(`${backendUrl}/maquina_status`);
+                const statusList = await statusRes.json();
+                // Busca VMs
                 const res = await fetch(`${backendUrl}/vms`);
                 const vms = await res.json();
-                vmsDisponiveis = vms; // Mostra todas as VMs
+                vmsDisponiveis = vms;
                 container.innerHTML = '';
                 vmsDisponiveis.forEach(vm => {
                     const div = document.createElement('div');
                     div.className = 'computador';
                     div.style.cursor = 'pointer';
                     div.id = `vm-card-${vm.vmid}`;
-                    let statusLabel = (vm.status === 'stopped') ? 'Livre' : 'Indisponível';
-                    let statusColor = (vm.status === 'stopped') ? '#38d39f' : '#e53e3e';
-                    div.innerHTML = ` 
+                    // Busca status no banco
+                    const statusObj = statusList.find(s => s.vmid == vm.vmid);
+                    let statusLabel = 'Livre';
+                    let statusColor = '#38d39f';
+                    if (statusObj && statusObj.status.toLowerCase() === 'indisponivel') {
+                        statusLabel = 'Indisponível';
+                        statusColor = '#e53e3e';
+                        div.onclick = null;
+                        div.style.opacity = 0.7;
+                        div.style.pointerEvents = 'none';
+                    } else {
+                        div.onclick = () => abrirModalKey(vm);
+                    }
+                    div.innerHTML = `
                         <img src="https://img.icons8.com/color/96/000000/laptop.png" alt="Laptop" style="width:64px;margin:0 auto 8px auto;display:block;">
                         <b>${vm.name || 'Livre'} (ID: ${vm.vmid})</b>
                         <span style="color:${statusColor};font-weight:bold;">Status: ${statusLabel}</span>
                         <span>Sistema: Outro</span>
                     `;
-                    if (vm.status === 'stopped') {
-                        div.onclick = () => abrirModalKey(vm);
-                    } else {
-                        div.onclick = null;
-                        div.style.opacity = 0.7;
-                        div.style.pointerEvents = 'none';
-                    }
                     container.appendChild(div);
                 });
                 if (container.innerHTML === '') {
