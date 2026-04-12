@@ -1,8 +1,0 @@
-proxmoxer
-fastapi
-uvicorn
-sqlalchemy
-asyncpg
-passlib[bcrypt]
-proxmoxer
-pydantic

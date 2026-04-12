@@ -1,3 +1,4 @@
+requests
 proxmoxer
 passlib
 # requirements.txt para backend Python
