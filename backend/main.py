@@ -9,12 +9,50 @@ from proxmoxer import ProxmoxAPI
 from pydantic import BaseModel
 from typing import List
 
-Base = declarative_base()
-
-
-
 
 Base = declarative_base()
+
+# Modelo Credencial (ORM)
+class Credencial(Base):
+    __tablename__ = "credenciais"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer)
+    nome = Column(String)
+    ip = Column(String)
+    porta = Column(Integer)
+    login = Column(String)
+    senha = Column(String)
+    chave_key = Column(String)
+    dias_restantes = Column(Integer)
+    created_at = Column(String)
+
+# Pydantic para criação
+class CredencialCreate(BaseModel):
+    user_id: int
+    nome: str
+    ip: str
+    porta: int
+    login: str
+    senha: str
+    chave_key: str
+    dias_restantes: int
+    created_at: str
+
+# Pydantic para resposta
+class CredencialOut(BaseModel):
+    id: int
+    user_id: int
+    nome: str
+    ip: str
+    porta: int
+    login: str
+    senha: str
+    chave_key: str
+    dias_restantes: int
+    created_at: str
+
+    class Config:
+        orm_mode = True
 
 class MaquinaAlugada(Base):
     __tablename__ = "maquinas_alugadas"
@@ -63,7 +101,7 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
-# ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
+# ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_ksy
 from fastapi import Query
 
 @app.get("/maquina_alugada/{vmid}/{chave}", response_model=MaquinaAlugadaOut)
