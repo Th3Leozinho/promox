@@ -125,8 +125,18 @@
 </head>
 
 <body>
-    
+
     <div id="sidebar-container"></div>
+    <script>
+        // Carregar sidebar dinamicamente
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('sidebar-container').innerHTML = html;
+                });
+        });
+    </script>
     
     <!-- Menu topo -->
     <div class="topbar"
