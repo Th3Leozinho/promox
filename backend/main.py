@@ -108,15 +108,15 @@ async def get_db():
 # ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_ksy
 from fastapi import Query
 
-@app.get("/maquina_alugada/{vmid}/{chave}", response_model=MaquinaAlugadaOut)
+@app.get("/maquina_alugada/{vmid}/{chave}", response_model=CredencialOut)
 async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
-        select(MaquinaAlugada).where(MaquinaAlugada.vmid == vmid, MaquinaAlugada.chave_key == chave)
+        select(Credencial).where(Credencial.vmid == vmid, Credencial.chave == chave)
     )
-    maquina = result.scalar_one_or_none()
-    if not maquina:
+    cred = result.scalar_one_or_none()
+    if not cred:
         raise HTTPException(status_code=404, detail="Máquina não encontrada")
-    return maquina
+    return cred
 
 # ENDPOINT para status das máquinas
 @app.get("/maquina_status", response_model=List[MaquinaStatusOut])
