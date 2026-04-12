@@ -34,6 +34,17 @@ class CredencialCreate(BaseModel):
     dias: int
 
 # Pydantic para resposta
+class CredencialOut(BaseModel):
+    id: int
+    vmid: int
+    login: str
+    senha: str
+    chave: str
+    ip: str
+    porta: int
+    dias: int
+    class Config:
+        orm_mode = True
 
 # Modelo e endpoint para status das máquinas
 class MaquinaStatus(Base):
