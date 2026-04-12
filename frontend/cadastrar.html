@@ -64,6 +64,7 @@
     <div class="container">
         <h2>Cadastrar Credenciais</h2>
         <form id="form-credencial">
+
             <div style="display: flex; gap: 16px;">
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
                     <label for="credencial-vmid">VMID:</label>
@@ -71,6 +72,12 @@
 
                     <label for="credencial-login">Login da VM:</label>
                     <input type="text" id="credencial-login" required>
+
+                    <label for="credencial-ip">IP da Máquina:</label>
+                    <input type="text" id="credencial-ip" required>
+
+                    <label for="credencial-dias">Dias de aluguel:</label>
+                    <input type="number" id="credencial-dias" required>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
                     <label for="credencial-senha-vm">Senha da VM:</label>
@@ -78,17 +85,11 @@
 
                     <label for="credencial-key">Chave (key):</label>
                     <input type="text" id="credencial-key" required>
+
+                    <label for="credencial-porta">Porta da Máquina:</label>
+                    <input type="number" id="credencial-porta" required>
                 </div>
             </div>
-
-            <label for="credencial-ip">IP da Máquina:</label>
-            <input type="text" id="credencial-ip" required>
-
-            <label for="credencial-porta">Porta da Máquina:</label>
-            <input type="number" id="credencial-porta" required>
-
-            <label for="credencial-dias">Dias de aluguel:</label>
-            <input type="number" id="credencial-dias" required>
 
             <button type="submit">Cadastrar</button>
         </form>
