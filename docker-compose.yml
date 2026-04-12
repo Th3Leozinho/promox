@@ -5,8 +5,7 @@ services:
     container_name: promox-backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
+    # volumes removido para produção, código já está na imagem
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
