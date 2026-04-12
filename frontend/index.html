@@ -145,20 +145,34 @@
             <h2>Criar VM</h2>
             <form id="create-vm-form">
                 <div style="display: flex; flex-direction: column;">
-                    <label for="name">Nome:</label>
+                    <label for="name">Nome da VM:</label>
                     <input type="text" id="name" required>
                 </div>
                 <div style="display: flex; flex-direction: column;">
                     <label for="cores">Cores:</label>
-                    <input type="number" id="cores" value="1" min="1" required>
+                    <select id="cores" required style="padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:1em;background:#f8fafc;">
+                        <option value="4">4 Core</option>
+                        <option value="8">8 Core</option>
+                        <option value="10">10 Core</option>
+                    </select>
                 </div>
                 <div style="display: flex; flex-direction: column;">
-                    <label for="memory">Memória (MB):</label>
-                    <input type="number" id="memory" value="1024" min="256" required>
+                    <label for="memory">Memória RAM (MB):</label>
+                    <select id="memory" required style="padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:1em;background:#f8fafc;">
+                        <option value="2048">2 GB</option>
+                        <option value="4096">4 GB</option>
+                        <option value="8192">8 GB</option>
+                        <option value="12288">12 GB</option>
+                    </select>
                 </div>
                 <div style="display: flex; flex-direction: column;">
                     <label for="disk">Disco (GB):</label>
-                    <input type="number" id="disk" value="10" min="1" required>
+                    <select id="disk" required style="padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:1em;background:#f8fafc;">
+                        <option value="120">120 GB</option>
+                        <option value="350">350 GB</option>
+                        <option value="500">500 GB</option>
+                        <option value="980">980 GB</option>
+                    </select>
                 </div>
                 <div style="display: flex; flex-direction: column; grid-column: 1 / span 2;">
                     <label for="iso">ISO:</label>
