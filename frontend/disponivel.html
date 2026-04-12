@@ -62,26 +62,42 @@
         <h1>Computadores Disponíveis</h1>
         <div id="computadores-list"></div>
     </div>
+    <!-- Modal para digitar a chave -->
+    <div id="modal-key" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:1000;align-items:center;justify-content:center;">
+        <div style="background:#fff;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.12);min-width:320px;max-width:90vw;display:flex;flex-direction:column;align-items:center;">
+            <h2>Digite a chave de acesso</h2>
+            <input id="input-key" type="password" placeholder="Chave" style="padding:10px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:1em;margin:16px 0;width:100%;max-width:260px;">
+            <div id="modal-key-error" style="color:#e53e3e;font-size:0.97em;min-height:24px;"></div>
+            <div style="display:flex;gap:16px;margin-top:8px;">
+                <button id="btn-key-confirm" style="background:#3182ce;color:#fff;border:none;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">Confirmar</button>
+                <button id="btn-key-cancel" style="background:#e2e8f0;color:#2d3748;border:none;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">Cancelar</button>
+            </div>
+        </div>
+    </div>
     <script>
         // Busca as VMs do backend e exibe as disponíveis
         const backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+        let vmsDisponiveis = [];
+        let vmSelecionada = null;
         async function carregarComputadoresDisponiveis() {
             const container = document.getElementById('computadores-list');
             container.innerHTML = 'Carregando...';
             try {
                 const res = await fetch(`${backendUrl}/vms`);
                 const vms = await res.json();
+                vmsDisponiveis = vms.filter(vm => vm.status === 'stopped');
                 container.innerHTML = '';
-                // Considera "Disponível" as VMs que estão paradas (status == 'stopped')
-                vms.filter(vm => vm.status === 'stopped').forEach(vm => {
+                vmsDisponiveis.forEach(vm => {
                     const div = document.createElement('div');
                     div.className = 'computador';
+                    div.style.cursor = 'pointer';
                     div.innerHTML = `
                         <img src="https://img.icons8.com/color/96/000000/laptop.png" alt="Laptop" style="width:64px;margin:0 auto 8px auto;display:block;">
                         <b>${vm.name || 'Livre'}</b>
                         <span>Status: Livre</span>
                         <span>Sistema: Outro</span>
                     `;
+                    div.onclick = () => abrirModalKey(vm);
                     container.appendChild(div);
                 });
                 if (container.innerHTML === '') {
@@ -91,6 +107,44 @@
                 container.innerHTML = '<div style="color:#e53e3e;text-align:center;padding:16px;">Erro ao buscar computadores.</div>';
             }
         }
+
+        function abrirModalKey(vm) {
+            vmSelecionada = vm;
+            document.getElementById('input-key').value = '';
+            document.getElementById('modal-key-error').innerText = '';
+            document.getElementById('modal-key').style.display = 'flex';
+        }
+        function fecharModalKey() {
+            document.getElementById('modal-key').style.display = 'none';
+        }
+        document.getElementById('btn-key-cancel').onclick = fecharModalKey;
+        document.getElementById('btn-key-confirm').onclick = async function() {
+            const key = document.getElementById('input-key').value.trim();
+            if (!key) {
+                document.getElementById('modal-key-error').innerText = 'Digite a chave.';
+                return;
+            }
+            // Verifica a chave no backend (credenciais)
+            try {
+                const res = await fetch(`${backendUrl}/credenciais`);
+                const creds = await res.json();
+                const cred = creds.find(c => c.vmid === vmSelecionada.vmid && c.chave === key);
+                if (!cred) {
+                    document.getElementById('modal-key-error').innerText = 'Chave inválida para este computador.';
+                    return;
+                }
+                // Torna o computador indisponível (exemplo: inicia a VM)
+                await fetch(`${backendUrl}/vms/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vmid: vmSelecionada.vmid })
+                });
+                fecharModalKey();
+                carregarComputadoresDisponiveis();
+            } catch (err) {
+                document.getElementById('modal-key-error').innerText = 'Erro ao validar chave.';
+            }
+        };
         carregarComputadoresDisponiveis();
     </script>
 </body>
