@@ -17,41 +17,27 @@ class Credencial(Base):
     __tablename__ = "credenciais"
     id = Column(Integer, primary_key=True, index=True)
     vmid = Column(Integer)
-    nome = Column(String)
-    ip = Column(String)
-    porta = Column(Integer)
     login = Column(String)
     senha = Column(String)
     chave = Column(String)
-    dias_restantes = Column(Integer)
-    created_at = Column(String)
 
 # Pydantic para criação
 class CredencialCreate(BaseModel):
     vmid: int
-    nome: str = ""
-    ip: str = ""
-    porta: int = 0
     login: str
     senha: str
     chave: str
-    dias_restantes: int = 0
-    created_at: str = ""
 
 # Pydantic para resposta
+
 
 
 class CredencialOut(BaseModel):
     id: int
     vmid: int
-    nome: str
-    ip: str
-    porta: int
     login: str
     senha: str
     chave: str
-    dias_restantes: int
-    created_at: str
 
     class Config:
         orm_mode = True
