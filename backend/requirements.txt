@@ -2,3 +2,5 @@
 # Adicione suas dependências aqui
 fastapi
 uvicorn[standard]
+sqlalchemy
+asyncpg
