@@ -188,6 +188,10 @@
         <div id="vms"></div>
     </div>
     <script>
+        // Proteção de login global
+        if (!localStorage.getItem('auth')) {
+            window.location.href = 'login.html';
+        }
         // Preenche o select de ISOs automaticamente
         async function carregarISOs() {
             const isoSelect = document.getElementById('iso');
@@ -210,10 +214,6 @@
             }
         }
         carregarISOs();
-        // Proteção de login
-        if (!localStorage.getItem('auth')) {
-            window.location.href = 'login.html';
-        }
         // Recupera nome do usuário do localStorage
         let username = localStorage.getItem('username');
         if (!username) {
