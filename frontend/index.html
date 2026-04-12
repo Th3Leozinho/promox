@@ -141,11 +141,10 @@
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;font-size:0.90em;">Dashboard</a>
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;font-size:0.90em;">Minhas VMs</a>
         <a href="#" style="color:#2d3748;text-decoration:none;font-weight:bold;padding:10px 24px;font-size:0.90em;">Configurações</a>
-        <a href="#" id="menu-credenciais" style="color:#2b6cb0;text-decoration:none;font-weight:bold;padding:10px 24px;font-size:0.90em;">Cadastrar Credenciais</a>
     </div>
     <div class="container" style="margin-left:240px;margin-top:72px;">
         <h1>Painel Proxmox - Mini AWS</h1>
-        <div id="conteudo-dashboard">
+        <div>
             <h2>Criar VM</h2>
             <form id="create-vm-form">
                 <div style="display: flex; flex-direction: column;">
@@ -176,19 +175,6 @@
         <hr>
         <h2>Minhas VMs</h2>
         <div id="vms"></div>
-    </div>
-    <div id="conteudo-credenciais" style="display:none;">
-        <h2>Cadastrar Credenciais</h2>
-        <form id="form-credencial" style="max-width:340px;margin-top:24px;display:flex;flex-direction:column;gap:14px;">
-            <label for="credencial-nome">Nome da Credencial:</label>
-            <input type="text" id="credencial-nome" required>
-            <label for="credencial-usuario">Usuário:</label>
-            <input type="text" id="credencial-usuario" required>
-            <label for="credencial-senha">Senha:</label>
-            <input type="password" id="credencial-senha" required>
-            <button type="submit" style="background:#3182ce;color:#fff;border:none;border-radius:6px;padding:10px 18px;font-weight:bold;cursor:pointer;">Cadastrar</button>
-        </form>
-        <div id="credencial-msg" style="margin-top:12px;color:#3182ce;"></div>
     </div>
     <script>
         // Preenche o select de ISOs automaticamente
@@ -306,25 +292,6 @@
         };
         fetchVMs();
         setInterval(fetchVMs, 10000);
-            // Alternância de menus
-            document.addEventListener('DOMContentLoaded', function() {
-                const menuCredenciais = document.getElementById('menu-credenciais');
-                const conteudoCredenciais = document.getElementById('conteudo-credenciais');
-                const conteudoDashboard = document.getElementById('conteudo-dashboard');
-                if (menuCredenciais && conteudoCredenciais && conteudoDashboard) {
-                    menuCredenciais.onclick = function(e) {
-                        e.preventDefault();
-                        conteudoDashboard.style.display = 'none';
-                        conteudoCredenciais.style.display = 'block';
-                    };
-                    // Voltar para Dashboard ao clicar em Dashboard
-                    document.querySelectorAll('.sidebar a')[0].onclick = function(e) {
-                        e.preventDefault();
-                        conteudoDashboard.style.display = 'block';
-                        conteudoCredenciais.style.display = 'none';
-                    };
-                }
-            });
     </script>
 </body>
 
