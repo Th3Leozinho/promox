@@ -1,7 +1,15 @@
-from sqlalchemy import Column, Integer, String
+
+from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.orm import declarative_base
-Base = declarative_base()
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from passlib.context import CryptContext
+from proxmoxer import ProxmoxAPI
 from pydantic import BaseModel
+from typing import List
+
+Base = declarative_base()
 
 class Credencial(Base):
     __tablename__ = "credenciais"
@@ -52,10 +60,10 @@ app.add_middleware(
 )
 
 # Banco de dados (ajuste a string conforme necessário)
+# Banco de dados (ajuste a string conforme necessário)
 DATABASE_URL = "postgresql+asyncpg://cbadmin:Leozinho191095%40@192.168.15.8:5432/postgres"
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
-Base = declarative_base()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class Usuario(Base):
@@ -88,10 +96,16 @@ async def criar_credencial(cred: CredencialCreate, db: AsyncSession = Depends(ge
     return db_cred
 
 # ENDPOINT para listar credenciais de um usuário
+# ENDPOINT para listar credenciais de um usuário
 @app.get("/credenciais/{usuario}", response_model=List[CredencialOut])
 async def listar_credenciais(usuario: str, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Credencial).where(Credencial.usuario == usuario))
     return result.scalars().all()
+
+# Função para obter sessão do banco
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
 
 async def get_db():
     async with SessionLocal() as session:
