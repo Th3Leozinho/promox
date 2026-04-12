@@ -91,13 +91,22 @@
                     const div = document.createElement('div');
                     div.className = 'computador';
                     div.style.cursor = 'pointer';
-                        div.innerHTML = ` 
+                    div.id = `vm-card-${vm.vmid}`;
+                    let statusLabel = (vm.status === 'stopped') ? 'Livre' : 'Indisponível';
+                    let statusColor = (vm.status === 'stopped') ? '#38d39f' : '#e53e3e';
+                    div.innerHTML = ` 
                         <img src="https://img.icons8.com/color/96/000000/laptop.png" alt="Laptop" style="width:64px;margin:0 auto 8px auto;display:block;">
-                            <b>${vm.name || 'Livre'} (ID: ${vm.vmid})</b>
-                        <span>Status: Livre</span>
+                        <b>${vm.name || 'Livre'} (ID: ${vm.vmid})</b>
+                        <span style="color:${statusColor};font-weight:bold;">Status: ${statusLabel}</span>
                         <span>Sistema: Outro</span>
                     `;
-                    div.onclick = () => abrirModalKey(vm);
+                    if (vm.status === 'stopped') {
+                        div.onclick = () => abrirModalKey(vm);
+                    } else {
+                        div.onclick = null;
+                        div.style.opacity = 0.7;
+                        div.style.pointerEvents = 'none';
+                    }
                     container.appendChild(div);
                 });
                 if (container.innerHTML === '') {
@@ -140,7 +149,14 @@
                     body: JSON.stringify({ vmid: vmSelecionada.vmid })
                 });
                 fecharModalKey();
-                carregarComputadoresDisponiveis();
+                // Atualiza status visualmente sem recarregar tudo
+                const card = document.getElementById(`vm-card-${vmSelecionada.vmid}`);
+                if (card) {
+                    card.querySelector('span').innerText = 'Status: Indisponível';
+                    card.querySelector('span').style.color = '#e53e3e';
+                    card.style.opacity = 0.7;
+                    card.style.pointerEvents = 'none';
+                }
             } catch (err) {
                 document.getElementById('modal-key-error').innerText = 'Erro ao validar chave.';
             }
