@@ -1,4 +1,3 @@
-
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
@@ -36,19 +35,15 @@ class CredencialCreate(BaseModel):
 
 # Pydantic para resposta
 
+# Modelo e endpoint para status das máquinas
+class MaquinaStatus(Base):
+    __tablename__ = "maquina_status"
+    vmid = Column(Integer, primary_key=True, index=True)
+    status = Column(String)
 
-
-
-class CredencialOut(BaseModel):
-    id: int
+class MaquinaStatusOut(BaseModel):
     vmid: int
-    login: str
-    senha: str
-    chave: str
-    ip: str
-    porta: int
-    dias: int
-
+    status: str
     class Config:
         orm_mode = True
 
@@ -112,6 +107,11 @@ async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(
         raise HTTPException(status_code=404, detail="Máquina não encontrada")
     return maquina
 
+# ENDPOINT para status das máquinas
+@app.get("/maquina_status", response_model=List[MaquinaStatusOut])
+async def listar_status(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(MaquinaStatus))
+    return result.scalars().all()
 
 # Banco de dados (ajuste a string conforme necessário)
 DATABASE_URL = "postgresql+asyncpg://cbadmin:Leozinho191095%40@192.168.15.8:5432/postgres"
