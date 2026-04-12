@@ -41,8 +41,12 @@ class MaquinaAlugadaOut(BaseModel):
     class Config:
         orm_mode = True
 
+
+# ...existing code...
+
 # ENDPOINT para buscar informações completas da máquina alugada por vmid e chave_key
 from fastapi import Query
+
 @app.get("/maquina_alugada/{vmid}/{chave}", response_model=MaquinaAlugadaOut)
 async def get_maquina_alugada(vmid: int, chave: str, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
