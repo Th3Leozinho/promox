@@ -1,15 +1,13 @@
-# ...existing code...
-
-from sqlalchemy import update
-
-# ...existing code...
-
-# Coloque o endpoint após a definição de app = FastAPI()
-
-
-# Endpoint para decrementar manualmente os dias restantes das máquinas alugadas
-from fastapi import FastAPI, Depends
-from sqlalchemy import update
+# Imports principais
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import Column, Integer, String, select, update
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from passlib.context import CryptContext
+from proxmoxer import ProxmoxAPI
+from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
 
@@ -18,15 +16,6 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
-@app.post("/decrementar_dias")
-async def decrementar_dias(db: AsyncSession = Depends(get_db)):
-    await db.execute(
-        update(MaquinaAlugada)
-        .where(MaquinaAlugada.dias_restantes > 0)
-        .values(dias_restantes=MaquinaAlugada.dias_restantes - 1)
-    )
-    await db.commit()
-    return {"msg": "Dias decrementados"}
 
 # ...existing code...
 
