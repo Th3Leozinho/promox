@@ -8,7 +8,7 @@ from sqlalchemy import update
 
 
 # Endpoint para decrementar manualmente os dias restantes das máquinas alugadas
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from sqlalchemy import update
 
 app = FastAPI()
