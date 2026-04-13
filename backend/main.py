@@ -1,3 +1,15 @@
+# Endpoint para decrementar manualmente os dias restantes das máquinas alugadas
+from sqlalchemy import update
+
+@app.post("/decrementar_dias")
+async def decrementar_dias(db: AsyncSession = Depends(get_db)):
+    await db.execute(
+        update(MaquinaAlugada)
+        .where(MaquinaAlugada.dias_restantes > 0)
+        .values(dias_restantes=MaquinaAlugada.dias_restantes - 1)
+    )
+    await db.commit()
+    return {"msg": "Dias decrementados"}
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
