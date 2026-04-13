@@ -12,5 +12,5 @@ services:
     build: ./frontend
     container_name: promox-frontend
     ports:
-      - "7001:8080"
+      - "7001:80"
     # volumes removido, arquivos copiados na build
