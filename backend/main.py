@@ -13,6 +13,11 @@ from sqlalchemy import update
 
 app = FastAPI()
 
+# Função para obter sessão do banco
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
+
 @app.post("/decrementar_dias")
 async def decrementar_dias(db: AsyncSession = Depends(get_db)):
     await db.execute(
