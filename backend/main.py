@@ -229,7 +229,7 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
 
 # Configurações do Proxmox (ajuste para produção)
 PROXMOX_HOST = "192.168.15.7"
-PROXMOX_USER = "root@pam"
+PROXMOX_USER = "root@pve"
 PROXMOX_PASSWORD = "Leozinho19@"
 PROXMOX_NODE = "pve"
 
