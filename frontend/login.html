@@ -90,7 +90,7 @@
                     // Login bem-sucedido
                     localStorage.setItem('auth', 'ok');
                     localStorage.setItem('username', username);
-                    window.location.href = 'index.html';
+                    window.location.href = 'home.html';
                 } else {
                     errorMsg.innerText = data.detail || 'Usuário ou senha inválidos';
                     errorMsg.style.display = 'block';
